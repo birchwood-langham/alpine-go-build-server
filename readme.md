@@ -1,6 +1,7 @@
 # Alpine Linux Go Build Server
 
-This build server allows you to checkout Go projects from GitLab and build them so they can be run on Alpine Linux. It supports managed dependencies through Go Modules (Go 1.11+) or Dep.
+This build server allows you to checkout Go projects from GitHub or GitLab and builds them. It supports managed dependencies through Go Modules (Go 1.11+) or Dep.
+The build server supports only pure Go projects, as dependency for C requires different support on Alpine and other Linuxes.
 
 The following environment variables are supported when starting the build server:
 
@@ -10,21 +11,58 @@ The following environment variables are supported when starting the build server
 | TOKEN | Y | The access token to the repo account | Secret! Don't tell anyone! |
 | OUTPUT_PATH | Y | Where to write the output of the build | /output/name-of-application |
 | MAIN_PATH | Y | The path to the main() function that will launch the application, can be left empty | server/server.go |
-| BRANCH | N | Specify the branch to check out and buildd | hotfix/my-hotfix
-| TAG | N | Specify a specific tag to checkout and build | v1.0.0 
+| BRANCH | N | Specify the branch to check out and buildd | hotfix/my-hotfix |
+| TAG | N | Specify a specific tag to checkout and build | v1.0.0 |
 | USE_DEP | N | If set to true, then project uses GOPATH file structure and dep to manage dependencies, otherwise assumes Go Modules | |
 | CREATE_TARBALL | N | If set to true, a tarball with all the project code will be zipped and placed in the output folder with the executable | |
+| USE_GITLAB | N | If set to true, script will attempt to check out project from GitLab instead of GitHub | |
 
 ### Example
 
-The following snippet will launch a build server and pull the project using the token you specify and put the executable generated 
+The following snippet will launch a build server and pulls the public project from GitHub and put the executable generated
 in the specified output path. The output path is volume mapped to your current directory on the docker host.
 
 ```bash 
 docker run --rm -v $PWD:/output \
     -e PROJECT_PATH=path/to/project.git \
     -e OUTPUT_PATH=/output/myapp \
-    -e MAIN_PATH=app/main.go
+    -e MAIN_PATH=app/main.go \
+    birchwoodlangham/alpine-go-build-server:latest
+```
+
+The following snippet will launch a build server and pull the private project from GitHub using the token you specify and put the executable generated
+in the specified output path. The output path is volume mapped to your current directory on the docker host.
+
+```bash 
+docker run --rm -v $PWD:/output \
+    -e PROJECT_PATH=path/to/project.git \
+    -e OUTPUT_PATH=/output/myapp \
+    -e MAIN_PATH=app/main.go \
+    -e TOKEN=Secret!Shh!!! \
+    birchwoodlangham/alpine-go-build-server:latest
+```
+
+The following snippet will launch a build server and pulls the public project from GitHub and put the executable generated
+in the specified output path. The output path is volume mapped to your current directory on the docker host.
+
+```bash 
+docker run --rm -v $PWD:/output \
+    -e PROJECT_PATH=path/to/project.git \
+    -e OUTPUT_PATH=/output/myapp \
+    -e MAIN_PATH=app/main.go \
+    -e USE_GITLAB=true \
+    birchwoodlangham/alpine-go-build-server:latest
+```
+
+The following snippet will launch a build server and pull the private project from GitHub using the token you specify and put the executable generated
+in the specified output path. The output path is volume mapped to your current directory on the docker host.
+
+```bash 
+docker run --rm -v $PWD:/output \
+    -e PROJECT_PATH=path/to/project.git \
+    -e OUTPUT_PATH=/output/myapp \
+    -e MAIN_PATH=app/main.go \
+    -e USE_GITLAB=true \
     -e TOKEN=Secret!Shh!!! \
     birchwoodlangham/alpine-go-build-server:latest
 ```
@@ -43,7 +81,7 @@ If not provided, the master branch will be used to do the build, to use a releas
 
 #### Branches and Tags Examples
 
-1. The following snippet will launch a build server and pull the project from a development branch using the token you specify and put the executable generated 
+1. The following snippet will launch a build server and pull the private GitHub project from a development branch using the token you specify and put the executable generated
 in the specified output path. The output path is volume mapped to your current directory on the docker host.
 
 ```bash 
