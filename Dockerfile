@@ -8,9 +8,10 @@ RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 RUN mkdir -p /go/src/gitlab.com/bl-paladin/nsa-backoffice/go-projects
 RUN export GOPATH=/go
 
-COPY scripts/build.sh /
-RUN chmod +x /build.sh
+COPY scripts/* /
 
 ENV CGO_ENABLED=0
+
+ENTRYPOINT [ "/entrypoint.sh" ]
 
 CMD [ "/build.sh" ]
