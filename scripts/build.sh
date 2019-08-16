@@ -18,6 +18,7 @@ if [[ -z ${PROJECT_PATH} ]] || [[ -z ${OUTPUT_PATH} ]] || [[ -z ${MAIN_PATH} ]];
     exit 1
 fi
 
+
 if [[ -z ${USE_GITLAB} ]]; then
     if [[ -n ${TOKEN} ]]; then
         echo 'Setting redirect for private GitHub repo'
