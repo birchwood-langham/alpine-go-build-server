@@ -18,6 +18,7 @@ if [[ -z ${PROJECT_PATH} ]] || [[ -z ${OUTPUT_PATH} ]] || [[ -z ${MAIN_PATH} ]];
     exit 1
 fi
 
+
 if [[ -z ${USE_GITLAB} ]]; then
     if [[ -n ${TOKEN} ]]; then
         echo 'Setting redirect for private GitHub repo'
@@ -60,7 +61,7 @@ fi
 if [[ ${USE_DEP} = true ]]; then 
     dep ensure
 else
-    go get
+    go mod download
 fi
 
 ## we compile and force recompile dependencies without C dependencies
