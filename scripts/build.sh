@@ -61,7 +61,7 @@ fi
 if [[ ${USE_DEP} = true ]]; then 
     dep ensure
 else
-    go get
+    go mod download
 fi
 
 ## we compile and force recompile dependencies without C dependencies
